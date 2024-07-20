@@ -106,6 +106,10 @@ on boot
 on boot && property:persist.vendor.usb.controller.default=*
     setprop vendor.usb.controller ${persist.vendor.usb.controller.default}
 
+on property:sys.boot_completed=1
+    # Enable PowerHAL hint processing
+    setprop vendor.powerhal.init 1
+
 on charger
     start vendor.power_off_alarm
     setprop sys.usb.controller 4e00000.dwc3
