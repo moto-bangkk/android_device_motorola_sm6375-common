@@ -135,6 +135,33 @@
     },
     {
       "Name": "GPUMinFreq",
+      "Path": "/sys/kernel/gpu/gpu_min_clock",
+      "Values": [
+        "840",
+        "770",
+        "650",
+        "490",
+        "390",
+        "266"
+      ],
+      "ResetOnInit": true
+    },
+    {
+      "Name": "GPUMaxFreq",
+      "Path": "/sys/kernel/gpu/gpu_max_clock",
+      "Values": [
+        "840",
+        "770",
+        "650",
+        "490",
+        "390",
+        "266"
+      ],
+      "DefaultIndex": 0,
+      "ResetOnInit": true
+    },
+    {
+      "Name": "GPUMinFreq",
       "Path": "/sys/class/kgsl/kgsl-3d0/devfreq/min_freq",
       "Values": [
         "650000000",
@@ -327,6 +354,12 @@
       "Node": "CPUBigClusterMaxFreq",
       "Duration": 0,
       "Value": "1516800"
+    },
+    {
+      "PowerHint": "SUSTAINED_PERFORMANCE",
+      "Node": "GPUMaxFreq",
+      "Duration": 0,
+      "Value": "840"
     },
     {
       "PowerHint": "AUDIO_STREAMING_LOW_LATENCY",
