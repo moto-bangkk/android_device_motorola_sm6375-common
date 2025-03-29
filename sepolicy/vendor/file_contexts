@@ -4,3 +4,6 @@
 
 # Power
 /(vendor|system/vendor)/bin/hw/android\.hardware\.power-service\.pixel-libperfmgr  u:object_r:hal_power_default_exec:s0
+
+# Vendor init scripts
+/vendor/bin/init.blair.post_boot.sh                             u:object_r:vendor_qti_init_shell_exec:s0

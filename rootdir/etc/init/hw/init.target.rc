@@ -134,6 +134,16 @@ service vendor.per_proxy /vendor/bin/pm-proxy
     group system
     disabled
 
+service blair-post-boot /vendor/bin/sh /vendor/bin/init.blair.post_boot.sh
+    class late_start
+    user root
+    group root system wakelock graphics
+    disabled
+    oneshot
+
+on property:vendor.post_boot.parsed=1
+    start blair-post-boot
+
 on property:init.svc.vendor.per_mgr=running
     start vendor.per_proxy
 
