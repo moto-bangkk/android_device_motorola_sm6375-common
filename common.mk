@@ -267,7 +267,8 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service.pixel-libperfmgr
+    android.hardware.power-service.pixel-libperfmgr \
+    libqti-perfd-client
 
 # Properties
 PRODUCT_VENDOR_PROPERTY_BLACKLIST := \
