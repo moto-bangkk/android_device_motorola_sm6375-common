@@ -1,0 +1,113 @@
+on init
+    # Setup final cpuset
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground_window/cpus 0-7
+    write /dev/cpuset/top-app/cpus 0-7
+
+    setprop dalvik.vm.dex2oat-cpu-set 0,1,2,3,4,5
+    setprop dalvik.vm.dex2oat-threads 6
+
+    # VM Tweaks
+    write /proc/sys/vm/dirty_writeback_centisecs 3000
+    write /proc/sys/vm/dirty_background_ratio 10
+    write /proc/sys/vm/dirty_ratio 20
+    write /proc/sys/vm/dirty_expire_centisecs 3000
+
+    # Boot time tuning
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_governor "performance"
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_governor "performance"
+    write /sys/devices/platform/soc/4804000.ufshc/clkgate_enable 0
+
+    # GPU Permissions
+    chown system system /sys/kernel/gpu/gpu_max_clock
+    chown system system /sys/kernel/gpu/gpu_min_clock
+    chmod 0666 /sys/kernel/gpu/gpu_max_clock
+    chmod 0666 /sys/kernel/gpu/gpu_min_clock
+
+    # fs tuning
+    write /sys/block/sda/queue/scheduler mq-deadline
+    write /sys/block/sda/queue/iostats 1
+    write /sys/block/sda/queue/read_ahead_kb 512
+    write /sys/block/sda/queue/nr_requests 64
+    write /sys/block/sda/queue/iosched/slice_idle 0
+
+    write /dev/sys/fs/by-name/userdata/iostat_enable 0
+    write /dev/sys/fs/by-name/userdata/cp_interval 6000
+    write /dev/sys/fs/by-name/userdata/gc_urgent_sleep_time 200
+
+    # Disable printk logging
+    write /proc/sys/kernel/printk_devkmsg off
+
+    # Enable suspend to RAM
+    write /sys/power/mem_sleep "deep"
+
+## Utilization Clamping
+    # Tuning
+    write /proc/sys/kernel/sched_util_clamp_min 128
+
+    # Real-Time tasks
+    write /dev/cpuctl/rt/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/rt/cpu.uclamp.max max
+    write /dev/cpuctl/rt/cpu.uclamp.min 0
+    write /dev/cpuctl/rt/cpu.shares 20480
+
+    # Background tasks for best efficiency
+    write /dev/cpuctl/background/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/system-background/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/background/cpu.shares 1024
+    write /dev/cpuctl/system-background/cpu.shares 2048
+    write /dev/cpuctl/background/cpu.uclamp.min 0
+    write /dev/cpuctl/background/cpu.uclamp.max 30
+    write /dev/cpuctl/system-background/cpu.uclamp.min 1
+    write /dev/cpuctl/system-background/cpu.uclamp.max 60
+
+    # Camera daemon tasks
+    write /dev/cpuctl/camera-daemon/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/camera-daemon/cpu.uclamp.max max
+    write /dev/cpuctl/camera-daemon/cpu.uclamp.min 70
+    write /dev/cpuctl/camera-daemon/cpu.shares 20480
+
+    # dex2oat tasks
+    write /dev/cpuctl/dex2oat/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/dex2oat/cpu.uclamp.max 60
+    write /dev/cpuctl/dex2oat/cpu.uclamp.min 0
+    write /dev/cpuctl/dex2oat/cpu.shares 2048
+
+    # Foreground tasks
+    write /dev/cpuctl/foreground/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/foreground/cpu.uclamp.max max
+    write /dev/cpuctl/foreground/cpu.shares 10240
+
+    # Foreground window tasks
+    write /dev/cpuctl/foreground_window/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/foreground_window/cpu.uclamp.min 10
+    write /dev/cpuctl/foreground_window/cpu.uclamp.max max
+    write /dev/cpuctl/foreground_window/cpu.shares 12288
+
+    # NeuralNetwork API HAL tasks
+    write /dev/cpuctl/nnapi-hal/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/nnapi-hal/cpu.uclamp.max max
+    write /dev/cpuctl/nnapi-hal/cpu.uclamp.min 90
+    write /dev/cpuctl/nnapi-hal/cpu.shares 20480
+
+    # Top app tasks
+    write /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/top-app/cpu.uclamp.max max
+    write /dev/cpuctl/top-app/cpu.shares 20480
+
+on property:sys.boot_completed=1
+    # PowerHAL Hint Processing
+    setprop vendor.powerhal.init 1
+
+    # Adjust watermark level
+    write /proc/sys/vm/watermark_scale_factor 125
+
+    # End boot time tuning
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_governor "schedutil"
+    write /sys/devices/platform/soc/4804000.ufshc/clkgate_enable 1
+
+    # fs tuning
+    write /sys/block/sda/queue/read_ahead_kb 128
+    write /sys/block/sda/queue/nr_requests 128
+
