@@ -262,7 +262,7 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service-qti
+    android.hardware.power-service.pixel-libperfmgr
 
 # Properties
 PRODUCT_VENDOR_PROPERTY_BLACKLIST := \
